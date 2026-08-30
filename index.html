@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro-Nex</title>
+  <style>
+    /* Cargar la fuente personalizada */
+    @font-face {
+      font-family: 'Astro-Nex';
+      src: url('Astro-Nex.ttf') format('truetype');
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    /* El canvas ocupa todo el fondo */
+    #matrix {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Contenedor superpuesto para el botón en el centro */
+    .contenido-centro {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      text-align: center;
+    }
+
+    /* Estilo del botón central */
+    .btn-matriz {
+      display: inline-block;
+      padding: 18px 36px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #000000;
+      background-color: #ffff00;
+      text-decoration: none;
+      border-radius: 6px;
+      box-shadow: 0 0 15px rgba(255, 255, 0, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .btn-matriz:hover {
+      background-color: #000000;
+      color: #ffff00;
+      box-shadow: 0 0 25px rgba(255, 255, 0, 1);
+      border: 2px solid #ffff00;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrix"></canvas>
+
+  <div class="contenido-centro">
+    <a href="https://uthopik.github.io/astronex" class="btn-matriz">Astro-Nex</a>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+
+    // Ajustar el tamaño del canvas a la pantalla
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Caracteres para la cascada
+    const chars = 'bcdfghjklmnvxz';
+    const fontSize = 18;
+    let columns = Math.floor(canvas.width / fontSize);
+    
+    // Array para almacenar la posición Y de cada columna
+    let drops = Array(columns).fill(1);
+
+    function draw() {
+      // Fondo semi-transparente negro para crear el efecto de estela
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Configurar color y fuente personalizada
+      ctx.fillStyle = '#ffff00'; // Amarillo
+      ctx.font = fontSize + 'px "Astro-Nex", monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        // Reiniciar la gota al llegar al fondo de forma aleatoria
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    // Recalcular columnas si cambia el tamaño de pantalla
+    window.addEventListener('resize', () => {
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array(columns).fill(1);
+    });
+
+    // Ejecutar la animación a 30 FPS
+    setInterval(draw, 33);
+  </script>
+</body>
+</html>
