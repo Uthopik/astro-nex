@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://astro-nex.eu/sitemap.xml
+Sitemap: https://uthopik.github.io/astro-nex/sitemap.xml
